@@ -1,62 +1,216 @@
+import React, {PureComponent} from 'react'
 import Head from 'next/head'
+import Popup from 'reactjs-popup'
+import Link from 'next/link'
 
-export default function Home() {
-  return (
-    <div className="container">
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
 
+export default class Home extends PureComponent{
+
+  state = {
+    players: [],
+    rows: [],
+    gameLength: "",
+    displayPlayers: false,
+    displayCustomLength: false,
+  }
+
+  componentDidMount() {
+    this.handleAddRow();
+  }
+
+ handleChange = idx => e => {
+     const { name, value } = e.target;
+     const rows = [...this.state.rows];
+     rows[idx] = {
+       [name]: value
+     };
+     this.setState({
+       rows
+     });
+   };
+   handleNewRow = idx => e => {
+       if(idx + 1 == this.state.rows.length) {
+           this.handleAddRow();
+       }
+   }
+   handleAddRow = () => {
+     const item = {
+       name: ""
+     };
+     this.setState({
+       rows: [...this.state.rows, item]
+     });
+   };
+   handleRemoveRow = () => {
+     this.setState({
+       rows: this.state.rows.slice(0, -1)
+     });
+   };
+
+   handlePlayerSave = () => {
+     let players = this.state.rows.filter(item => item.name != undefined && item.name != "").map(item => {
+         return item.name;   
+     });
+     this.setState({
+       players: players, 
+       displayPlayers: true
+      });
+   }
+
+   handleLengthChange = e => {
+    const { value } = e.target;
+    console.log(value);
+    this.setState({gameLength: value})
+   }
+
+   handleLengthSelect = e => {
+     console.log(e.target.value);
+
+    this.setState({gameLength: e.target.value})
+   }
+
+   handleLengthSave = () => {
+     
+   }
+
+  displayCustomLength = () => {
+    this.setState({
+      displayCustomLength: !this.state.displayCustomLength
+    })
+  }
+
+
+  render() {
+
+    let showPlayers = null;
+    let showCustomLength = null;
+    let showLength = null;
+
+    if(this.state.displayPlayers){
+      showPlayers = (
+        <p style={{textAlign: "center"}}>{this.state.players.length} player(s) selected</p>
+      )
+    }
+    if(this.state.displayCustomLength) {
+      showCustomLength = (
+        <p>
+          <input className="custom-length-input" type="text" onChange={this.handleLengthChange}></input>
+        </p>
+      )
+    }
+    if(this.state.gameLength != "") {
+      showLength = (
+        <p style={{textAlign: "center"}}>You have selected {this.state.gameLength} holes</p>
+      )
+    }
+
+    return (
+      <div className="container">
       <main>
         <h1 className="title">
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
+          Welcome to Fore-Score
         </h1>
 
         <p className="description">
-          Get started by editing <code>pages/index.js</code>
+          Your scorecard for firsbeegolf
         </p>
 
         <div className="grid">
-          <a href="https://nextjs.org/docs" className="card">
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
+    <Popup trigger={<a className="card" onClick={this.displayAddPlayers}>
+            <h3 style={{textAlign: "center"}}>Add players</h3>
+            <p>Select who is playing</p>
+            {showPlayers}
           </a>
+          } contentStyle={{width: "90%"}} modal>
+            {close => (
+              <div className="modal">
+                  <a className="close" onClick={close}>
+                  &times;
+                  </a>
+                  <div className="header"> Add players</div>
+                  <div className="content">
+                      <table  style={{width: "100%"}}>
+                          <tbody>
+                          {this.state.rows.map((item, idx) => (
+                              <tr id="addr0" key={idx}>
+                              <td>{idx + 1}</td>
+                              <td>
+                                  <input
+                                  type="text"
+                                  name="name"
+                                  value={this.state.rows[idx].name}
+                                  onChange={this.handleChange(idx)}
+                                  onFocus={this.handleNewRow(idx)}
+                                  className="form-control"
+                                  />
+                              </td>
+                              </tr>
+                          ))}
+                          </tbody>
+                      </table>
+                  </div>
+                  <div className="actions">
+                  <button
+                      className="button"
+                      onClick={() => {
+                      this.handlePlayerSave();
+                      close();
+                      }}>
+                      Save
+                  </button>
+                  </div>
+              </div>
+              )}
+      </Popup>
 
-          <a href="https://nextjs.org/learn" className="card">
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
+      <Popup trigger = {
+          <a className="card">
+            <h3 style={{textAlign: "center"}}>Length</h3>
+            <p>How long is your game?</p>
+            {showLength}
+          </a> 
+          } contentStyle={{width: "90%"}} modal>
+            {close => (
+              <div className="modal">
+                <a className="close" onClick={close}>
+                  &times;
+                  </a>
 
-          <a
-            href="https://github.com/zeit/next.js/tree/master/examples"
-            className="card"
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className="card"
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
+                  <div className="header"> Select length</div>
+                  <div className="content grid">
+                    <div className="card-small">
+                      <button className="button" onClick={this.handleLengthSelect} value="9" >9</button>
+                      <button className="button" onClick={this.handleLengthSelect} value="12" >12</button>
+                      <button className="button" onClick={this.handleLengthSelect} value="18" >18</button>
+                    </div>
+                    <div  style={{textAlign: "center"}} className="card-big">
+                      <button className="button" onClick={this.displayCustomLength}>custom</button>
+                      {showCustomLength}
+                    </div>
+                  </div>
+                  <div className="actions">
+                  <button
+                      className="button"
+                      onClick={() => {
+                      this.handleLengthSave();
+                      close();
+                      }}>
+                      Save
+                  </button>
+                  </div>
+              </div>
+            )}
+          </Popup>
+          <Link href={{ pathname: '/game', query: {players: JSON.stringify(this.state.players), length: this.state.gameLength } }}>
+            <a className="card">
+              <h3 style={{textAlign: "center"}} >Lets go &rarr;</h3>
+            </a>
+          </Link>
         </div>
       </main>
 
       <footer>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className="logo" />
-        </a>
+          Made by Jimmy Fagerholm
       </footer>
 
       <style jsx>{`
@@ -70,7 +224,7 @@ export default function Home() {
         }
 
         main {
-          padding: 5rem 0;
+          padding: 2rem 0;
           flex: 1;
           display: flex;
           flex-direction: column;
@@ -116,7 +270,7 @@ export default function Home() {
         .title {
           margin: 0;
           line-height: 1.15;
-          font-size: 4rem;
+          font-size: 2rem;
         }
 
         .title,
@@ -126,7 +280,7 @@ export default function Home() {
 
         .description {
           line-height: 1.5;
-          font-size: 1.5rem;
+          font-size: 1.2rem;
         }
 
         code {
@@ -149,6 +303,7 @@ export default function Home() {
         }
 
         .card {
+          width: 70%;
           margin: 1rem;
           flex-basis: 45%;
           padding: 1.5rem;
@@ -158,6 +313,32 @@ export default function Home() {
           border: 1px solid #eaeaea;
           border-radius: 10px;
           transition: color 0.15s ease, border-color 0.15s ease;
+        }
+        .card-small {
+          margin: 0.5rem;
+          flex-basis: 45%;
+          padding: 1.5rem 0.5rem;
+          text-align: left;
+          color: inherit;
+          text-decoration: none;
+        }
+        .card-small button, .card-big button {
+          min-width: 50px;
+          font-size: 2em;
+          background: none;
+          border-radius: 10px;
+          border: 2px solid #eaeaea;
+          margin: 3px 10px;
+          padding: 5px;
+        }
+        .card-small button:hover,
+        .card-small button:focus,
+        .card-small button:active,
+        .card-big button:hover,
+        .card-big button:focus,
+        .card.big button:active {
+          color: #0070f3
+          font-size: 1.5rem;
         }
 
         .card:hover,
@@ -173,13 +354,10 @@ export default function Home() {
         }
 
         .card p {
+          text-align: center;
           margin: 0;
           font-size: 1.25rem;
           line-height: 1.5;
-        }
-
-        .logo {
-          height: 1em;
         }
 
         @media (max-width: 600px) {
@@ -203,7 +381,80 @@ export default function Home() {
         * {
           box-sizing: border-box;
         }
+        .modal {
+          font-size: 16px;
+        }
+        .modal > .header {
+          width: 100%;
+          border-bottom: 1px solid gray;
+          font-size: 18px;
+          text-align: center;
+          padding: 5px;
+        }
+        .modal > .content {
+          width: 100%;
+          padding: 10px 5px;
+        }
+        .modal > .actions {
+          width: 100%;
+          padding: 10px 5px;
+          margin: auto;
+          text-align: center;
+        }
+        .modal > .close {
+          cursor: pointer;
+          position: absolute;
+          display: block;
+          padding: 2px 5px;
+          line-height: 20px;
+          right: -10px;
+          top: -10px;
+          font-size: 24px;
+          background: #ffffff;
+          border-radius: 18px;
+          border: 1px solid #cfcece;
+        
+        }
+        .modal > .actions > .button {
+          font-family: Roboto,Arial,sans-serif;
+            color: #000;
+            cursor: pointer;
+            padding: 0 30px;
+            display: inline-block;
+            margin: 10px 15px;
+            text-transform: uppercase;
+            line-height: 2em;
+            letter-spacing: 1.5px;
+            font-size: 1em;
+            outline: none;
+            position: relative;
+            font-size: 14px;
+            border: 3px solid #cfcece;
+            background-color: #fff;
+            border-radius: 15px 15px 15px 15px;
+            transition: all .3s;
+        }
+        .table {
+          width: 100%;
+        }
+        
+        .tableRow{
+          width: 100%;
+          border-bottom: solid gray 1px;
+        }
+        .form-control {
+          border: none;
+          border-bottom: 1px solid;
+          font-size: 1.5rem;
+        }
+
+        .custom-length-input {
+          border: none;
+          border-bottom: 1px solid;
+          font-size: 2rem;
+          text-align: center;
+        }
       `}</style>
     </div>
-  )
+  )}
 }
