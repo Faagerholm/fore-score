@@ -129,7 +129,7 @@ export default class Home extends PureComponent{
                   </a>
                   <div className="header"> Add players</div>
                   <div className="content">
-                      <table  style={{width: "100%"}}>
+                      <table>
                           <tbody>
                           {this.state.rows.map((item, idx) => (
                               <tr id="addr0" key={idx}>
@@ -184,7 +184,7 @@ export default class Home extends PureComponent{
                       <button className="button" onClick={this.handleLengthSelect} value="18" >18</button>
                     </div>
                     <div  style={{textAlign: "center"}} className="card-big">
-                      <button className="button" onClick={this.displayCustomLength}>custom</button>
+                      <button className="button custom-button" onClick={this.displayCustomLength}>custom</button>
                       {showCustomLength}
                     </div>
                   </div>
@@ -303,7 +303,7 @@ export default class Home extends PureComponent{
         }
 
         .card {
-          width: 70%;
+          width: 80%;
           margin: 1rem;
           flex-basis: 45%;
           padding: 1.5rem;
@@ -324,12 +324,16 @@ export default class Home extends PureComponent{
         }
         .card-small button, .card-big button {
           min-width: 50px;
-          font-size: 2em;
+          font-size: 16px;
           background: none;
-          border-radius: 10px;
-          border: 2px solid #eaeaea;
+          border-radius: 15px;
+          border: 3px solid #eaeaea;
           margin: 3px 10px;
           padding: 5px;
+          text-transform: uppercase;
+        }
+        .card-big .custom-button{
+          padding: 5px 20px;
         }
         .card-small button:hover,
         .card-small button:focus,
@@ -394,6 +398,8 @@ export default class Home extends PureComponent{
         .modal > .content {
           width: 100%;
           padding: 10px 5px;
+          border-bottom: 1px solid #eaeaea;
+          font-size: 14px;
         }
         .modal > .actions {
           width: 100%;
@@ -424,8 +430,6 @@ export default class Home extends PureComponent{
             margin: 10px 15px;
             text-transform: uppercase;
             line-height: 2em;
-            letter-spacing: 1.5px;
-            font-size: 1em;
             outline: none;
             position: relative;
             font-size: 14px;
@@ -446,11 +450,15 @@ export default class Home extends PureComponent{
           border: none;
           border-bottom: 1px solid;
           font-size: 1.5rem;
+          padding: 0 5px;
+          margin: 0 15px;
+          width: 90%;
         }
 
         .custom-length-input {
+          width: 80%;
           border: none;
-          border-bottom: 1px solid;
+          border-bottom: 1px solid #696969;
           font-size: 2rem;
           text-align: center;
         }

@@ -48,6 +48,14 @@ class Game extends PureComponent {
             })
         }))
     }
+    handleRefreshScore = () => {
+        console.log("Refresh")
+        let score = Array(this.props.players.length).fill(0).map(
+            row => new Array(this.props.length).fill(0)); 
+        this.setState({
+            score: score
+        })
+    }
 
     createTable = () => {
         
@@ -89,9 +97,12 @@ class Game extends PureComponent {
                 <table>
                         {this.createTable()}
                 </table>
-                <Link href="/">
-                <a><FontAwesomeIcon icon="arrow-left" /> Back</a>
-                </Link>
+                <div style={{textAlign: 'center', padding: '1rem 0'}}>
+                    <Link href="/">
+                    <a><FontAwesomeIcon icon="arrow-left" /> Back</a>
+                    </Link>
+                    <p className="refresh-button" onClick={this.handleRefreshScore}><FontAwesomeIcon icon="sync-alt"/></p>
+                </div>
                 <style jsx global>{`
                 table {
                     width: 100%;
@@ -133,6 +144,12 @@ class Game extends PureComponent {
                 }
                 .score-button:active {
                     animation: pulse 0.5s 1 ease-out;
+                }
+                .refresh-button {
+                    font-size: 1.2rem;
+                    display: inline-block;
+                    margin-left: 40px;
+                    padding: 10px;
                 }
 
                 @keyframes pulse {

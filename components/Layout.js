@@ -1,8 +1,8 @@
 import Head from 'next/head'
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faMinus, faPlus, faArrowLeft } from '@fortawesome/free-solid-svg-icons'
+import { faMinus, faPlus, faArrowLeft, faSyncAlt } from '@fortawesome/free-solid-svg-icons'
 
-library.add(faMinus, faPlus, faArrowLeft)
+library.add(faMinus, faPlus, faArrowLeft, faSyncAlt)
 
 const Layout = (props) => (
     <div>
