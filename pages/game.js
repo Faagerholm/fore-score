@@ -15,7 +15,8 @@ class Game extends PureComponent {
         const {pathname, query } = this.props.router
         this.state = {
             score: Array(this.props.players.length).fill(0).map(
-                row => new Array(this.props.length).fill(0))
+                row => new Array(this.props.length).fill(0)),
+            spin: false,
         }
     }
     
@@ -49,7 +50,6 @@ class Game extends PureComponent {
         }))
     }
     handleRefreshScore = () => {
-        console.log("Refresh")
         let score = Array(this.props.players.length).fill(0).map(
             row => new Array(this.props.length).fill(0)); 
         this.setState({
@@ -91,6 +91,7 @@ class Game extends PureComponent {
     }
 
     render() {
+        const spin = this.state.spin
         return (
             <Layout>
                 <h3 style={{textAlign: 'center'}}>This is a game of {this.props.length} holes</h3>
@@ -101,7 +102,12 @@ class Game extends PureComponent {
                     <Link href="/">
                     <a><FontAwesomeIcon icon="arrow-left" /> Back</a>
                     </Link>
-                    <p className="refresh-button" onClick={this.handleRefreshScore}><FontAwesomeIcon icon="sync-alt"/></p>
+                    <p className={spin ? 'spin': ''} onClick={() => {this.setState({spin: true}); this.handleRefreshScore()}} 
+                        onAnimationEnd={() => this.setState({ spin: false })} style={{             
+                            fontSize: "1.2rem",
+                            display: "inline-block",
+                            marginLeft: "40px",
+                            padding: "10px"}}><FontAwesomeIcon icon="sync-alt"/></p>
                 </div>
                 <style jsx global>{`
                 table {
@@ -145,11 +151,29 @@ class Game extends PureComponent {
                 .score-button:active {
                     animation: pulse 0.5s 1 ease-out;
                 }
-                .refresh-button {
-                    font-size: 1.2rem;
-                    display: inline-block;
-                    margin-left: 40px;
-                    padding: 10px;
+                .spin {
+                    color: #0070f3;
+                    animation: spin 1s 1 ease-out;
+                }
+
+                @keyframes spin {
+                    0% {
+                        transform: rotate(0deg);
+                    }
+                    25% {
+                        transform: rotate(90deg);
+                        
+                    }
+                    50% {
+                        transform: rotate(180deg);
+                    
+                    }
+                    75% {
+                        transform: rotate(270deg);
+                    }
+                    100% {
+                        transform: rotate(360deg);
+                    }
                 }
 
                 @keyframes pulse {

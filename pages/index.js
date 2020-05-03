@@ -9,7 +9,7 @@ export default class Home extends PureComponent{
   state = {
     players: [],
     rows: [],
-    gameLength: "",
+    gameLength: 0,
     displayPlayers: false,
     displayCustomLength: false,
   }
@@ -46,7 +46,6 @@ export default class Home extends PureComponent{
        rows: this.state.rows.slice(0, -1)
      });
    };
-
    handlePlayerSave = () => {
      let players = this.state.rows.filter(item => item.name != undefined && item.name != "").map(item => {
          return item.name;   
@@ -55,40 +54,30 @@ export default class Home extends PureComponent{
        players: players, 
        displayPlayers: true
       });
-   }
-
+   };
    handleLengthChange = e => {
     const { value } = e.target;
-    console.log(value);
-    this.setState({gameLength: value})
-   }
-
+    this.setState({gameLength: parseInt(value, 10)})
+   };
    handleLengthSelect = e => {
-     console.log(e.target.value);
-
-    this.setState({gameLength: e.target.value})
-   }
-
-   handleLengthSave = () => {
-     
-   }
-
+    this.setState({gameLength: parseInt(e.target.value, 10)})
+   };
   displayCustomLength = () => {
     this.setState({
       displayCustomLength: !this.state.displayCustomLength
     })
-  }
-
+   };
 
   render() {
 
     let showPlayers = null;
     let showCustomLength = null;
     let showLength = null;
+    let showContinuePlay = null;
 
-    if(this.state.displayPlayers){
+    if(this.state.displayPlayers) {
       showPlayers = (
-        <p style={{textAlign: "center"}}>{this.state.players.length} player(s) selected</p>
+        <p style={{textAlign: "center", color: "#0070f3"}}>{this.state.players.length} player(s) selected</p>
       )
     }
     if(this.state.displayCustomLength) {
@@ -100,8 +89,24 @@ export default class Home extends PureComponent{
     }
     if(this.state.gameLength != "") {
       showLength = (
-        <p style={{textAlign: "center"}}>You have selected {this.state.gameLength} holes</p>
+        <p style={{textAlign: "center", color: "#0070f3"}}>You have selected {this.state.gameLength} holes</p>
       )
+    }
+    if(this.state.gameLength == 0 || this.state.players.length == 0){
+      
+      showContinuePlay = (<Popup trigger={
+        <a className="card">
+        <h3 style={{textAlign: "center"}} >Lets go &rarr;</h3>
+        </a>} position="center center"
+        closeOnDocumentClick>
+          <span>Please select number of players and holes before continuing.</span>
+    </Popup>)
+    }else {
+      showContinuePlay = (<Link href={{ pathname: '/game', query: {players: JSON.stringify(this.state.players), length: this.state.gameLength } }}>
+        <a className="card">
+          <h3 style={{textAlign: "center"}} >Lets go &rarr;</h3>
+        </a>
+      </Link>)
     }
 
     return (
@@ -116,51 +121,52 @@ export default class Home extends PureComponent{
         </p>
 
         <div className="grid">
-    <Popup trigger={<a className="card" onClick={this.displayAddPlayers}>
+      <Popup trigger={
+          <a className="card" onClick={this.displayAddPlayers}>
             <h3 style={{textAlign: "center"}}>Add players</h3>
             <p>Select who is playing</p>
             {showPlayers}
           </a>
           } contentStyle={{width: "90%"}} modal>
-            {close => (
-              <div className="modal">
-                  <a className="close" onClick={close}>
-                  &times;
-                  </a>
-                  <div className="header"> Add players</div>
-                  <div className="content">
-                      <table>
-                          <tbody>
-                          {this.state.rows.map((item, idx) => (
-                              <tr id="addr0" key={idx}>
-                              <td>{idx + 1}</td>
-                              <td>
-                                  <input
-                                  type="text"
-                                  name="name"
-                                  value={this.state.rows[idx].name}
-                                  onChange={this.handleChange(idx)}
-                                  onFocus={this.handleNewRow(idx)}
-                                  className="form-control"
-                                  />
-                              </td>
-                              </tr>
-                          ))}
-                          </tbody>
-                      </table>
-                  </div>
-                  <div className="actions">
-                  <button
-                      className="button"
-                      onClick={() => {
-                      this.handlePlayerSave();
-                      close();
-                      }}>
-                      Save
-                  </button>
-                  </div>
-              </div>
-              )}
+          {close => (
+            <div className="modal">
+                <a className="close" onClick={close}>
+                &times;
+                </a>
+                <div className="header"> Add players</div>
+                <div className="content">
+                    <table>
+                        <tbody>
+                        {this.state.rows.map((item, idx) => (
+                            <tr id="addr0" key={idx}>
+                            <td>{idx + 1}</td>
+                            <td>
+                                <input
+                                type="text"
+                                name="name"
+                                value={this.state.rows[idx].name}
+                                onChange={this.handleChange(idx)}
+                                onFocus={this.handleNewRow(idx)}
+                                className="form-control"
+                                />
+                            </td>
+                            </tr>
+                        ))}
+                        </tbody>
+                    </table>
+                </div>
+                <div className="actions">
+                <button
+                    className="button"
+                    onClick={() => {
+                    this.handlePlayerSave();
+                    close();
+                    }}>
+                    Save
+                </button>
+                </div>
+            </div>
+            )}
       </Popup>
 
       <Popup trigger = {
@@ -179,9 +185,9 @@ export default class Home extends PureComponent{
                   <div className="header"> Select length</div>
                   <div className="content grid">
                     <div className="card-small">
-                      <button className="button" onClick={this.handleLengthSelect} value="9" >9</button>
-                      <button className="button" onClick={this.handleLengthSelect} value="12" >12</button>
-                      <button className="button" onClick={this.handleLengthSelect} value="18" >18</button>
+                      <button className="button" onClick={e => {this.handleLengthSelect(e); close()}} value="9" >9</button>
+                      <button className="button" onClick={e => {this.handleLengthSelect(e); close()}} value="12" >12</button>
+                      <button className="button" onClick={e => {this.handleLengthSelect(e); close()}} value="18" >18</button>
                     </div>
                     <div  style={{textAlign: "center"}} className="card-big">
                       <button className="button custom-button" onClick={this.displayCustomLength}>custom</button>
@@ -191,21 +197,14 @@ export default class Home extends PureComponent{
                   <div className="actions">
                   <button
                       className="button"
-                      onClick={() => {
-                      this.handleLengthSave();
-                      close();
-                      }}>
+                      onClick={close}>
                       Save
                   </button>
                   </div>
               </div>
             )}
           </Popup>
-          <Link href={{ pathname: '/game', query: {players: JSON.stringify(this.state.players), length: this.state.gameLength } }}>
-            <a className="card">
-              <h3 style={{textAlign: "center"}} >Lets go &rarr;</h3>
-            </a>
-          </Link>
+          {showContinuePlay}
         </div>
       </main>
 
@@ -213,7 +212,7 @@ export default class Home extends PureComponent{
           Made by Jimmy Fagerholm
       </footer>
 
-      <style jsx>{`
+      <style jsx global>{`
         .container {
           min-height: 100vh;
           padding: 0 0.5rem;
@@ -370,9 +369,7 @@ export default class Home extends PureComponent{
             flex-direction: column;
           }
         }
-      `}</style>
 
-      <style jsx global>{`
         html,
         body {
           padding: 0;
