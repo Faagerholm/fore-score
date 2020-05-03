@@ -119,6 +119,8 @@ export default class Home extends PureComponent{
         <p className="description">
           Your scorecard for firsbeegolf
         </p>
+        
+        <p id="desktop-disclaimer">Please visit me on a mobile device for the full experiance.</p>
 
         <div className="grid">
       <Popup trigger={
@@ -273,13 +275,17 @@ export default class Home extends PureComponent{
         }
 
         .title,
-        .description {
+        .description,
+        #desktop-disclaimer {
           text-align: center;
         }
 
         .description {
           line-height: 1.5;
           font-size: 1.2rem;
+        }
+        #desktop-disclaimer {
+          display: none;
         }
 
         code {
@@ -367,6 +373,14 @@ export default class Home extends PureComponent{
           .grid {
             width: 100%;
             flex-direction: column;
+          }
+        }
+        @media (min-width: 800px) {
+          #desktop-disclaimer {
+            color: red;
+            display: block;
+            line-height: 1.5;
+            font-size: 1.5rem;
           }
         }
 
