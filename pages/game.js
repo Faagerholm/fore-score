@@ -120,10 +120,13 @@ class Game extends PureComponent {
                     border: 1px solid black;
                     border-collapse: collapse;
                 }
-
                 th, td {
                     padding: 3px;
                 }
+                tbody tr:nth-child(odd){
+                    background-color: #7fafff;
+                    color: #fff;
+                  }
                 .score-entry-row {
                     padding: 3px;
                 }
