@@ -117,10 +117,10 @@ export default class Home extends PureComponent{
         </h1>
 
         <p className="description">
-          Your scorecard for firsbeegolf
+          Your scorecard for frisbeegolf
         </p>
         
-        <p id="desktop-disclaimer">Please visit me on a mobile device for the full experiance.</p>
+        <p id="desktop-disclaimer">Please visit me on a mobile device for the full experience.</p>
 
         <div className="grid">
       <Popup trigger={
