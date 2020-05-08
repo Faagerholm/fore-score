@@ -207,6 +207,9 @@ export default class Home extends PureComponent{
             )}
           </Popup>
           {showContinuePlay}
+          <a className="card">
+            <h5 style={{textAlign: "center"}}>Save selections</h5>
+          </a>
         </div>
       </main>
 

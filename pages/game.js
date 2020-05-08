@@ -170,6 +170,9 @@ class Game extends PureComponent {
                 .score-button:active {
                     animation: pulse 0.5s 1 ease-out;
                 }
+                .score-button:focus {
+                    animation: pulse 0.5s 1 ease-out;
+                }
                 .spin {
                     color: #0070f3;
                     animation: spin 1s 1 ease-out;
