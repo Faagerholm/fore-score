@@ -302,8 +302,6 @@ export default class Home extends PureComponent{
           align-items: center;
           justify-content: center;
           flex-wrap: wrap;
-
-          max-width: 800px;
           margin-top: 3rem;
         }
 
@@ -449,7 +447,7 @@ export default class Home extends PureComponent{
             border-radius: 15px 15px 15px 15px;
             transition: all .3s;
         }
-        .table {
+        table {
           width: 100%;
         }
         
@@ -472,6 +470,12 @@ export default class Home extends PureComponent{
           border-bottom: 1px solid #696969;
           font-size: 2rem;
           text-align: center;
+        }
+
+        @media screen and (min-width: 800px) {
+          .popup-content {
+            width: auto;
+          }
         }
       `}</style>
     </div>

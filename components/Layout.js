@@ -13,7 +13,7 @@ const Layout = (props) => (
         <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/fontawesome.min.js" />
         <meta charSet="utf-8" />  
         </Head>
-        <div style={{margin: "1rem"}}>
+        <div className="container">
             {props.children}
         </div>
     </div>

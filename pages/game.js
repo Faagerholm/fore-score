@@ -36,6 +36,10 @@ class Game extends PureComponent {
     }
 
     handleAddScore = (idx, player) => e => {
+        
+        if ("vibrate" in navigator) {
+            navigator.vibrate(100);
+        }
         this.setState(({ score }) => ({ score: 
             score.map((row, i) => {
                 let newRow = row.map((player_score, j) => {
@@ -60,16 +64,16 @@ class Game extends PureComponent {
     createTable = () => {
         
         let table = []
-        let table_header = [<td key="table-hole-header">Hole</td>]
+        let table_header = [<th key="table-hole-header">Hole</th>]
         table_header.push(this.props.players.map((player, index) => {
-            return (<td key={'table_header_' + index}>{player}</td>)
+            return (<th key={'table_header_' + index}>{player}</th>)
         }));
         table.push(<thead key={'table_head'}><tr key={'table_tr_header'}>{table_header}</tr></thead>)
         
         let rows = []
         for(let i = 0; i < this.props.length; i++) {
             let cols = []
-            cols.push(<td key={'row_holeNr_' + i} className='td-hold'>{ i + 1 }</td>)
+            cols.push(<td key={'row_holeNr_' + i} className='sticky-col td-hold'>{ i + 1 }</td>)
             for(let j = 0; j < this.props.players.length; j++) {
                 cols.push(<td key={'row_' + i + '_entry_' + j} className="score-entry-row"><div className="score-grid" >
                 <a className="td-entry score-button" onClick={this.handleSubtractScore(i, j)}><FontAwesomeIcon icon="minus" /></a>
@@ -94,7 +98,6 @@ class Game extends PureComponent {
         const spin = this.state.spin
         return (
             <Layout>
-                <h3 style={{textAlign: 'center'}}>This is a game of {this.props.length} holes</h3>
                 <table>
                         {this.createTable()}
                 </table>
@@ -110,15 +113,27 @@ class Game extends PureComponent {
                             padding: "10px"}}><FontAwesomeIcon icon="sync-alt"/></p>
                 </div>
                 <style jsx global>{`
+                
+                .container {
+                    padding: 0;
+                    margin: 0;
+                }
                 table {
                     width: 100%;
+                    position: relative;
+                    top: 0;
                 }
                 table > * {
                     text-align: center;
                 }
                 table, th, td {
-                    border: 1px solid black;
                     border-collapse: collapse;
+                }
+                th {
+                    background: white;
+                    position: sticky;
+                    top: 0;
+                    box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);
                 }
                 th, td {
                     padding: 3px;
@@ -126,7 +141,8 @@ class Game extends PureComponent {
                 tbody tr:nth-child(odd){
                     background-color: #7fafff;
                     color: #fff;
-                  }
+                }
+
                 .score-entry-row {
                     padding: 3px;
                 }
